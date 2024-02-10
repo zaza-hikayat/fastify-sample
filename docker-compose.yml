@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  api:
+    container_name: api
+    build:
+      context: .
+    environment:
+      - APP_PORT=${APP_PORT}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - database
+    entrypoint: sh -c "sleep 2 && npx knex migrate:latest && npm start"
+  database:
+    container_name: database
+    image: postgres:alpine
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
